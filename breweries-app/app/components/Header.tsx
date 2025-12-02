@@ -18,7 +18,7 @@ export default function Header() {
       setTyped(description.slice(0, i));
       i++;
       if (i > description.length) clearInterval(interval);
-    }, 45); // скорость печати
+    }, 45);
 
     return () => clearInterval(interval);
   }, []);
@@ -45,27 +45,29 @@ export default function Header() {
           </p>
         </div>
       </div>
-      <Input />
-      <AnimatePresence>
-        {selected.length > 0 && (
-          <motion.button
-            initial={{ opacity: 0, x: 20, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 20, scale: 0.9 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            onClick={deleteSelected}
-            className="
+      <div className="grid">
+        <Input />
+        <AnimatePresence>
+          {selected.length > 0 && (
+            <motion.button
+              initial={{ opacity: 0, x: 20, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 20, scale: 0.9 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              onClick={deleteSelected}
+              className="
               px-5 py-3 rounded-2xl text-white text-lg font-medium
               bg-gradient-to-r from-red-500 to-rose-600 
               shadow-lg shadow-red-700/30
               hover:shadow-red-500/50 hover:scale-105
               active:scale-95 transition-all
             "
-          >
-            Delete selected ({selected.length})
-          </motion.button>
-        )}
-      </AnimatePresence>
+            >
+              Delete selected ({selected.length})
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
     </header>
   );
 }
