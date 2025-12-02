@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -15,9 +14,6 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "BrewFinder — Breweries",
   description: "A brewery catalog with lazy scrolling and details view",
-    icons: {
-    icon: "/favicon.png",
-  },
 };
 
 export default function RootLayout({
@@ -27,8 +23,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="animated-bg"></div>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <div className="beer-bg"></div>
         {children}
       </body>
     </html>

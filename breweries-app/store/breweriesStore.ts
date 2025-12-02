@@ -12,31 +12,57 @@ export interface Brewery {
 }
 
 interface BreweryStore {
-  renderList: Brewery[];     // всегда максимум 15
-  bufferList: Brewery[];     // запас
+  renderList: Brewery[];
   selected: string[];
   page: number;
   isLoading: boolean;
-  visibleCount: number;      // показываем: 5 → 10 → 15
+
+  visibleCount: number;
+  searchName: string;
+  searchCity: string;
 
   fetchInitial: () => Promise<void>;
   fetchMore: (need: number) => Promise<void>;
   expandVisible: () => void;
+  filteredList: () => Brewery[];
   toggleSelect: (id: string) => void;
   deleteSelected: () => Promise<void>;
+  setSearchName: (text: string) => void;
+  setSearchCity: (text: string) => void;
 }
 
 export const useBreweryStore = create<BreweryStore>((set, get) => ({
   renderList: [],
-  bufferList: [],
   selected: [],
   page: 1,
   isLoading: false,
   visibleCount: 5,
 
-  // -------------------------
-  // 1) Первая загрузка
-  // -------------------------
+  searchName: "",
+  searchCity: "",
+
+  // 🔥 ВАЖНО: если оба поля пустые → возвращаем ВЕСЬ список
+  filteredList: () => {
+    const { renderList, searchName, searchCity } = get();
+
+    const name = searchName.trim().toLowerCase();
+    const city = searchCity.trim().toLowerCase();
+
+    // ничего не введено → просто отдаем renderList
+    if (!name && !city) return renderList;
+
+    return renderList.filter((e) => {
+      const byName = name ? e.name.toLowerCase().includes(name) : true; // поле пустое → не фильтруем по нему
+      const byCity = city ? e.city.toLowerCase().includes(city) : true;
+
+      return byName && byCity;
+    });
+  },
+
+  // ✅ обязательно через set, иначе состояние не меняется
+  setSearchName: (text: string) => set({ searchName: text }),
+  setSearchCity: (text: string) => set({ searchCity: text }),
+
   fetchInitial: async () => {
     set({ isLoading: true });
 
@@ -46,41 +72,18 @@ export const useBreweryStore = create<BreweryStore>((set, get) => ({
     const data: Brewery[] = await res.json();
 
     set({
-      renderList: data.slice(0, 15),
-      bufferList: data.slice(15),
-      page: 2,
+      renderList: data,
       visibleCount: 5,
+      page: 2,
       isLoading: false,
     });
   },
 
-  // -------------------------
-  // 2) Увеличиваем видимую часть (len 5→10→15)
-  // -------------------------
-  expandVisible: () => {
-    const { visibleCount } = get();
-    if (visibleCount < 15) {
-      set({ visibleCount: visibleCount + 5 });
-    }
-  },
-
-  // -------------------------
-  // 3) Догружаем N элементов
-  // -------------------------
   fetchMore: async (need: number) => {
-    let { bufferList, page, renderList } = get();
+    let { page, renderList } = get();
     const collected: Brewery[] = [];
 
-    // 1. Сначала из bufferList
-    if (bufferList.length > 0) {
-      const take = bufferList.slice(0, need);
-      collected.push(...take);
-      bufferList = bufferList.slice(need);
-      need -= take.length;
-    }
-
-    // 2. Если не хватило — грузим новые страницы
-    while (need > 0) {
+    while (collected.length < need) {
       const res = await fetch(
         `https://api.openbrewerydb.org/v1/breweries?per_page=15&page=${page}`
       );
@@ -90,28 +93,24 @@ export const useBreweryStore = create<BreweryStore>((set, get) => ({
 
       if (data.length === 0) break;
 
-      const take = data.slice(0, need);
-      const rest = data.slice(need);
-
-      collected.push(...take);
-      bufferList.push(...rest);
-
-      need -= take.length;
+      collected.push(...data);
     }
 
-    // 3. Добавляем в renderList до 15 элементов
-    const newRender = [...renderList, ...collected].slice(0, 15);
+    const result = [...renderList, ...collected].slice(0, 15);
 
     set({
-      renderList: newRender,
-      bufferList,
+      renderList: result,
       page,
     });
   },
 
-  // -------------------------
-  // 4) Выделение
-  // -------------------------
+  expandVisible: () => {
+    const { visibleCount } = get();
+    if (visibleCount < 15) {
+      set({ visibleCount: visibleCount + 5 });
+    }
+  },
+
   toggleSelect: (id) => {
     const { selected } = get();
     set({
@@ -132,7 +131,6 @@ export const useBreweryStore = create<BreweryStore>((set, get) => ({
       selected: [],
     });
 
-    // Добавляем столько же, сколько удалили
     if (removed > 0) {
       await get().fetchMore(removed);
     }
