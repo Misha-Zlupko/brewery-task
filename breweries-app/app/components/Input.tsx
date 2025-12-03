@@ -29,8 +29,6 @@ export default function Input() {
           transition-all
         "
       />
-
-      {/* CITY */}
       <input
         value={searchCity}
         onChange={(e) => setSearchCity(e.target.value)}

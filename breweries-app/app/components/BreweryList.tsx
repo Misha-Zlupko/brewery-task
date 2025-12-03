@@ -22,7 +22,6 @@ export default function BreweryList() {
 
   const isFiltering = searchName.trim() !== "" || searchCity.trim() !== "";
 
-  // показываем только первые visibleCount
   const visible = filteredList.slice(
     0,
     isFiltering ? filteredList.length : visibleCount
@@ -32,11 +31,11 @@ export default function BreweryList() {
     fetchInitial();
   }, []);
 
-  // 🟡 Infinite scroll должен работать только когда фильтра нет
   useEffect(() => {
-    if (isFiltering) return; // ← отключаем скролл при фильтре
+    if (isFiltering) return;
 
     if (!sentinelRef.current) return;
+
     if (visibleCount >= 15) return;
 
     const observer = new IntersectionObserver(

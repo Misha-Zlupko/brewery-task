@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import BreweryMap from "@/app/components/BreweryMap";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function BreweryPage() {
   const params = useParams();
@@ -55,10 +56,8 @@ export default function BreweryPage() {
     );
   }
 
-  // === PAGE RENDER ===
   return (
     <main className="min-h-screen flex justify-center items-center px-6 py-12 text-white">
-      {/* === BACK BUTTON === */}
       <button
         onClick={() => router.back()}
         className="
@@ -74,7 +73,6 @@ export default function BreweryPage() {
       >
         ← Back
       </button>
-      {/* === CARD === */}
       <div
         className="
             w-full max-w-3xl p-10 rounded-3xl 
@@ -108,13 +106,13 @@ export default function BreweryPage() {
           )}
 
           {brewery.website_url && (
-            <a
+            <Link
               href={brewery.website_url}
               target="_blank"
               className="items-center contents gap-2 text-blue-300 hover:text-white underline"
             >
               🌐 Open website
-            </a>
+            </Link>
           )}
         </div>
         <div className="mt-10 mb-2">
@@ -123,7 +121,6 @@ export default function BreweryPage() {
             longitude={brewery.longitude}
           />
         </div>
-        {/* <BreweryMap lat={40.7128} lng={-74.006} />   */}
       </div>
     </main>
   );

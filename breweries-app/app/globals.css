@@ -42,9 +42,6 @@ body {
   animation: fade-in-up 0.4s ease forwards;
 }
 
-/* ---- ANIMATED GRADIENT BACKGROUND ---- */
-
-/* === CRAFT BEER BACKGROUND === */
 .beer-bg {
   position: fixed;
   inset: 0;

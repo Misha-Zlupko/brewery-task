@@ -41,14 +41,12 @@ export const useBreweryStore = create<BreweryStore>((set, get) => ({
   searchName: "",
   searchCity: "",
 
-  // 🔥 ВАЖНО: если оба поля пустые → возвращаем ВЕСЬ список
   filteredList: () => {
     const { renderList, searchName, searchCity } = get();
 
     const name = searchName.trim().toLowerCase();
     const city = searchCity.trim().toLowerCase();
 
-    // ничего не введено → просто отдаем renderList
     if (!name && !city) return renderList;
 
     return renderList.filter((e) => {
@@ -59,7 +57,6 @@ export const useBreweryStore = create<BreweryStore>((set, get) => ({
     });
   },
 
-  // ✅ обязательно через set, иначе состояние не меняется
   setSearchName: (text: string) => set({ searchName: text }),
   setSearchCity: (text: string) => set({ searchCity: text }),
 
