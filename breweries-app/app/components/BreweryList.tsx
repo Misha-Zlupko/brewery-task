@@ -55,10 +55,9 @@ export default function BreweryList() {
     <div className="flex flex-col gap-10">
       {filteredList.length === 0 && isFiltering && (
         <div className="text-center text-neutral-400 text-xl py-10">
-          Ничего не найдено
+          Nothing found
         </div>
       )}
-
       {visible.map((b, i) => (
         <div
           key={b.id}
@@ -72,7 +71,6 @@ export default function BreweryList() {
           />
         </div>
       ))}
-
       {!isFiltering && visibleCount < 15 && (
         <div ref={sentinelRef} className="h-20"></div>
       )}

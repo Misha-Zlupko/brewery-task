@@ -36,8 +36,6 @@ export default function Header() {
           Breweries
         </h1>
         <div className="h-px w-28 bg-white/30 mt-3 rounded-full"></div>
-
-        {/* THEMATIC TEXT WITH TYPING */}
         <div className="mt-4">
           <p className="text-white/60 text-lg tracking-wide font-light">
             {typed}

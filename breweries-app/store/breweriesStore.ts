@@ -50,7 +50,7 @@ export const useBreweryStore = create<BreweryStore>((set, get) => ({
     if (!name && !city) return renderList;
 
     return renderList.filter((e) => {
-      const byName = name ? e.name.toLowerCase().includes(name) : true; // поле пустое → не фильтруем по нему
+      const byName = name ? e.name.toLowerCase().includes(name) : true; 
       const byCity = city ? e.city.toLowerCase().includes(city) : true;
 
       return byName && byCity;

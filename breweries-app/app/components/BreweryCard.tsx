@@ -25,7 +25,6 @@ export default function BreweryCard({ b, isSelected, toggleSelect }: Props) {
       className={`
         group relative p-8 rounded-3xl cursor-pointer overflow-hidden
         border transition-all duration-300 shadow-xl backdrop-blur-sm
-
         ${
           isSelected
             ? "border-amber-400 ring-2 ring-amber-500 shadow-amber-500/40 scale-[1.03]"
